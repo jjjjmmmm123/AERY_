@@ -169,15 +169,6 @@ def gas():
     return redirect(url_for('login'))
 
 
-@app.route('/profile')
-def profile():
-    if 'loggedin' in session:
-        # User is loggedin show them the home page
-        return render_template('profile.html', username=session['email'])
-    # User is not loggedin redirect to login page
-    return redirect(url_for('login'))
-
-
 @app.route('/test')
 def test():
     if 'loggedin' in session:
@@ -226,6 +217,12 @@ def save_learning():
                 session['id'], learning_style[checked[0]], learning_style[checked[1]], learning_style[checked[2]]))
             mysql.connection.commit()
 
+     
+        cursor.execute(f'SELECT * FROM academic WHERE user_id={session["id"]} ORDER BY id DESC LIMIT 1')
+        academic = cursor.fetchone()
+        if academic:
+            redirect(url_for("profile"))
+
         return redirect(url_for('test2'))
     return redirect(url_for('login'))
 
@@ -269,12 +266,19 @@ def save_academic():
                 session['id'], mathematics, science, english, social_science))
             mysql.connection.commit()
 
+
+       
+        cursor.execute(f'SELECT * FROM interest WHERE user_id={session["id"]} ORDER BY id DESC LIMIT 1')
+        interest = cursor.fetchone()
+        if interest:
+            redirect(url_for("profile"))
+
         return redirect(url_for('test3'))
     return redirect(url_for('login'))
 
 
-@app.route('/usr')
-def usr():
+@app.route('/profile')
+def profile():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute(
@@ -284,10 +288,16 @@ def usr():
         academic = cursor.fetchone()
         cursor.execute(f'SELECT * FROM interest WHERE user_id={session["id"]} ORDER BY id DESC LIMIT 1')
         interest = cursor.fetchone()
+        cursor.execute(f'SELECT * FROM result WHERE user_id={session["id"]} ORDER BY id DESC LIMIT 1')
+        result = cursor.fetchone()
+        mysql.connection.commit()
 
-        return render_template('profile.html', username=session['email'], result=None, learning_style=learning_style,
-                               academic=academic, interest=interest)
-    # User is not loggedin redirect to login page
+        return render_template('profile.html',
+                               username=session['email'],
+                               result=result,
+                               learning_style=learning_style,
+                               academic=academic, interest=interest
+                               )
     return redirect(url_for('login'))
 
 
@@ -327,14 +337,10 @@ def generate():
         strand_result = strand_map[result]
 
         cursor.execute('INSERT INTO result VALUES (NULL, %s, %s)', (
-            strand_result, session['id'],))
+            strand_result, session['id']))
+        mysql.connection.commit()
 
-        return render_template('profile.html',
-                               username=session['email'],
-                               result=strand_result,
-                               learning_style=learning_style,
-                               academic=academic, interest=interest
-                               )
+        return redirect(url_for('profile'))
 
     return redirect(url_for('login'))
 
