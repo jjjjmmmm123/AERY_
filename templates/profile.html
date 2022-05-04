@@ -160,8 +160,9 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
+                                                            Linguistic: &nbsp
                                                             {% if learning_style %}
-                                                                <p>{{ learning_style['top_1'] }}</p>
+                                                                <p>{{ learning_style['result_linguistic'] }} %</p>
                                                             {% else %}
                                                                 <p>...</p>
                                                             {% endif %}
@@ -169,12 +170,13 @@
                                                         <td style="display: inline-flex">
                                                             Mathematics: &nbsp
                                                             {% if academic %}
-                                                                <p>{{ academic['mathematics'] }}</p>
+                                                                <p>{{ academic['result_math'] }} %</p>
                                                             {% endif %}
                                                         </td>
                                                         <td>
+                                                            Realistic: &nbsp
                                                             {% if interest %}
-                                                                <p>{{ interest['top_1'] }}</p>
+                                                                <p>{{ interest['result_realistic'] }} %</p>
                                                             {% else %}
                                                                 <p>...</p>
                                                             {% endif %}
@@ -182,8 +184,9 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
+                                                            Logical-Mathematical: &nbsp
                                                             {% if learning_style %}
-                                                                <p>{{ learning_style['top_2'] }}</p>
+                                                                <p>{{ learning_style['result_logical'] }} %</p>
                                                             {% else %}
                                                                 <p>...</p>
                                                             {% endif %}
@@ -191,12 +194,13 @@
                                                         <td style="display: inline-flex">
                                                             English: &nbsp
                                                             {% if academic %}
-                                                                <p>{{ academic['english'] }}</p>
+                                                                <p>{{ academic['result_english'] }} %</p>
                                                             {% endif %}
                                                         </td>
                                                         <td>
+                                                            Linguistic: &nbsp
                                                             {% if interest %}
-                                                                <p>{{ interest['top_2'] }}</p>
+                                                                <p>{{ interest['result_investigate'] }} %</p>
                                                             {% else %}
                                                                 <p>...</p>
                                                             {% endif %}
@@ -204,8 +208,9 @@
                                                     </tr>
                                                     <tr>
                                                         <td>
+                                                            Spatial: &nbsp
                                                             {% if learning_style %}
-                                                                <p>{{ learning_style['top_3'] }}</p>
+                                                                <p>{{ learning_style['result_spatial'] }} %</p>
                                                             {% else %}
                                                                 <p>...</p>
                                                             {% endif %}
@@ -213,33 +218,88 @@
                                                         <td style="display: inline-flex">
                                                             Science: &nbsp
                                                             {% if academic %}
-                                                                <p>{{ academic['science'] }}</p>
+                                                                <p>{{ academic['result_science'] }} %</p>
                                                             {% endif %}
                                                         </td>
                                                         <td>
+                                                            Artistic: &nbsp
                                                             {% if interest %}
-                                                                <p>{{ interest['top_3'] }}</p>
+                                                                <p>{{ interest['result_artistic'] }} %</p>
                                                             {% else %}
                                                                 <p>...</p>
                                                             {% endif %}
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td></td>
+                                                        <td>
+                                                            Bodily-Kinesthetic: &nbsp
+                                                            {% if learning_style %}
+                                                                <p>{{ learning_style['result_bodily'] }} %</p>
+                                                            {% else %}
+                                                                <p>...</p>
+                                                            {% endif %}
+                                                        </td>
                                                         <td style="display: inline-flex">
                                                             Social-Science: &nbsp
                                                             {% if academic %}
-                                                                <p>{{ academic['social_science'] }}</p>
+                                                                <p>{{ academic['result_social_science'] }} %</p>
                                                             {% endif %}
                                                         </td>
-                                                        <td></td>
+                                                        <td>
+                                                            Social: &nbsp
+                                                            {% if interest %}
+                                                                <p>{{ interest['result_social'] }} %</p>
+                                                            {% else %}
+                                                                <p>...</p>
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            Musical: &nbsp
+                                                            {% if learning_style %}
+                                                                <p>{{ learning_style['result_musical'] }} %</p>
+                                                            {% else %}
+                                                                <p>...</p>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>
+                                                        </td>
+                                                        <td>
+                                                            Enterprising: &nbsp
+                                                            {% if interest %}
+                                                                <p>{{ interest['result_enterprising'] }} %</p>
+                                                            {% else %}
+                                                                <p>...</p>
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            Interpersonal: &nbsp
+                                                            {% if learning_style %}
+                                                                <p>{{ learning_style['result_interpersonal'] }} %</p>
+                                                            {% else %}
+                                                                <p>...</p>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>
+                                                        </td>
+                                                        <td>
+                                                            Conventional: &nbsp
+                                                            {% if interest %}
+                                                                <p>{{ interest['result_conventional'] }} %</p>
+                                                            {% else %}
+                                                                <p>...</p>
+                                                            {% endif %}
+                                                        </td>
                                                     </tr>
                                                 </table>
                                             </div>
 
                                             <br>
                                             <center>
-                                                 <form action="{{ url_for('generate') }}">
+                                                <form action="{{ url_for('generate') }}">
                                                     <input type="submit" class="button" value="Generate">
                                                 </form>
 
@@ -248,8 +308,8 @@
                                             <h4>YOUR STRAND IS:</h4>
                                             <input type="text" id="result" disabled
                                                    name="checks"
-                                                   value="{{ result['strand'] }}"
-                                                   placeholder="" 
+                                                   value="{{ result['result'] }}"
+                                                   placeholder=""
                                             >
 
                                         </div>

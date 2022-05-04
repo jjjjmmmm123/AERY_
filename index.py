@@ -199,52 +199,42 @@ def test3():
 @app.route('/slearning', methods=['GET', 'POST'])
 def save_learning():
     if 'loggedin' in session:
-        learning_style = {
-            "0": "linguistic",
-            "1": "logical",
-            "2": "spatial",
-            "3": "bodily",
-            "4": "musical",
-            "5": "interpersonal",
-            "6": "intrapersonal",
-            "7": "naturalist",
-        }
-
         if request.method == 'POST':
-            checked = request.form.getlist("result_checked")
+            check_naturalist = round(len(request.form.getlist("check_naturalist")) / 8 * 100, 2)
+            check_intrapersonal = round(len(request.form.getlist("check_intrapersonal")) / 8 * 100, 2)
+            check_interpersonal = round(len(request.form.getlist("check_interpersonal")) / 8 * 100, 2)
+            check_musical = round(len(request.form.getlist("check_musical")) / 8 * 100, 2)
+            check_bodily = round(len(request.form.getlist("check_bodily")) / 8 * 100, 2)
+            check_spatial = round(len(request.form.getlist("check_spatial")) / 8 * 100, 2)
+            check_logical = round(len(request.form.getlist("check_logical")) / 8 * 100, 2)
+            check_linguistic = round(len(request.form.getlist("check_linguistic")) / 8 * 100, 2)
+
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO learning_style VALUES (NULL, %s, %s, %s, %s)', (
-                session['id'], learning_style[checked[0]], learning_style[checked[1]], learning_style[checked[2]]))
+            cursor.execute('INSERT INTO learning_style VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (
+                session['id'], check_linguistic, check_logical, check_spatial, check_bodily,
+                check_musical, check_interpersonal, check_intrapersonal, check_naturalist))
             mysql.connection.commit()
 
-     
-        cursor.execute(f'SELECT * FROM academic WHERE user_id={session["id"]} ORDER BY id DESC LIMIT 1')
-        academic = cursor.fetchone()
-        if academic:
-            redirect(url_for("profile"))
+        return redirect(url_for("profile"))
 
-        return redirect(url_for('test2'))
     return redirect(url_for('login'))
 
 
 @app.route('/sinterest', methods=['GET', 'POST'])
 def save_interest():
     if 'loggedin' in session:
-        interest = {
-            "0": "realistic",
-            "1": "investigate",
-            "2": "artistic",
-            "3": "social",
-            "4": "enterprising",
-            "5": "conventional",
-
-        }
+        check_realistic = round(round(len(request.form.getlist("check_realistic")) / 7 * 100), 2)
+        check_investigate = round(len(request.form.getlist("check_investigate")) / 7 * 100, 2)
+        check_artistic = round(len(request.form.getlist("check_artistic")) / 7 * 100, 2)
+        check_social = round(len(request.form.getlist("check_social")) / 7 * 100, 2)
+        check_enterprising = round(len(request.form.getlist("check_enterprising")) / 7 * 100, 2)
+        check_conventional = round(len(request.form.getlist("check_conventional")) / 7 * 100, 2)
 
         if request.method == 'POST':
-            checked = request.form.getlist("result_checked")
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cursor.execute('INSERT INTO interest VALUES (NULL, %s, %s, %s, %s)', (
-                session['id'], interest[checked[0]], interest[checked[1]], interest[checked[2]]))
+            cursor.execute('INSERT INTO interest VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)', (
+                session['id'], check_realistic, check_investigate, check_artistic, check_social, check_enterprising,
+                check_conventional))
             mysql.connection.commit()
 
         return redirect(url_for('profile'))
@@ -263,17 +253,10 @@ def save_academic():
             social_science = request.form.get("social_science")
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute('INSERT INTO academic VALUES (NULL, %s, %s, %s, %s, %s)', (
-                session['id'], mathematics, science, english, social_science))
+                session['id'], mathematics, science, social_science, english))
             mysql.connection.commit()
 
-
-       
-        cursor.execute(f'SELECT * FROM interest WHERE user_id={session["id"]} ORDER BY id DESC LIMIT 1')
-        interest = cursor.fetchone()
-        if interest:
-            redirect(url_for("profile"))
-
-        return redirect(url_for('test3'))
+        return redirect(url_for("profile"))
     return redirect(url_for('login'))
 
 
@@ -291,6 +274,8 @@ def profile():
         cursor.execute(f'SELECT * FROM result WHERE user_id={session["id"]} ORDER BY id DESC LIMIT 1')
         result = cursor.fetchone()
         mysql.connection.commit()
+
+        print(learning_style)
 
         return render_template('profile.html',
                                username=session['email'],
@@ -318,26 +303,20 @@ def generate():
                                    learning_style=learning_style,
                                    academic=academic, interest=interest)
 
-        x = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-        x[table_map[learning_style["top_1"]]] = 1
-        x[table_map[learning_style["top_2"]]] = 1
-        x[table_map[learning_style["top_3"]]] = 1
-
-        x[table_map[interest["top_1"]]] = 1
-        x[table_map[interest["top_2"]]] = 1
-        x[table_map[interest["top_3"]]] = 1
-
-        x[table_map["mathematics"]] = academic["mathematics"]
-        x[table_map["science"]] = academic["science"]
-        x[table_map["english"]] = academic["english"]
-        x[table_map["social_science"]] = academic["social_science"]
+        x = [interest["result_realistic"], interest["result_investigate"], interest["result_artistic"],
+             interest["result_social"], interest["result_enterprising"],
+             interest["result_conventional"], learning_style["result_linguistic"], learning_style["result_logical"],
+             learning_style["result_spatial"],
+             learning_style["result_bodily"], learning_style["result_musical"], learning_style["result_interpersonal"],
+             learning_style["result_intrapersonal"], learning_style["result_naturalist"], academic["result_math"],
+             academic["result_english"],
+             academic["result_science"], academic["result_social_science"]]
 
         result = predict([x])[0]
         strand_result = strand_map[result]
 
-        cursor.execute('INSERT INTO result VALUES (NULL, %s, %s)', (
-            strand_result, session['id']))
+        cursor.execute('INSERT INTO result VALUES (NULL, %s, %s)', (session['id'],
+                                                                    strand_result))
         mysql.connection.commit()
 
         return redirect(url_for('profile'))
