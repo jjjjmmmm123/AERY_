@@ -223,7 +223,7 @@ def save_learning():
 @app.route('/sinterest', methods=['GET', 'POST'])
 def save_interest():
     if 'loggedin' in session:
-        check_realistic = round(round(len(request.form.getlist("check_realistic")) / 7 * 100), 2)
+        check_realistic = round(len(request.form.getlist("check_realistic")) / 7 * 100, 2)
         check_investigate = round(len(request.form.getlist("check_investigate")) / 7 * 100, 2)
         check_artistic = round(len(request.form.getlist("check_artistic")) / 7 * 100, 2)
         check_social = round(len(request.form.getlist("check_social")) / 7 * 100, 2)
@@ -244,8 +244,6 @@ def save_interest():
 @app.route('/sacademic', methods=['GET', 'POST'])
 def save_academic():
     if 'loggedin' in session:
-        print("first")
-
         if request.method == 'POST' and "mathematics" in request.form and "science" in request.form and "english" in request.form and "social_science" in request.form:
             mathematics = request.form.get("mathematics")
             science = request.form.get("science")
@@ -275,11 +273,16 @@ def profile():
         result = cursor.fetchone()
         mysql.connection.commit()
 
-        print(learning_style)
+        results = None
+        if result:
+            results = [("stem", round(result["stem"] * 100, 2)), ("humss", round(result["humss"] * 100, 2)), ("abm", round(result["abm"] * 100, 2)),
+                       ("gas", round(result["gas"] * 100, 2))]
+
+            results.sort(key=lambda x: -x[1])
 
         return render_template('profile.html',
                                username=session['email'],
-                               result=result,
+                               results=results,
                                learning_style=learning_style,
                                academic=academic, interest=interest
                                )
@@ -312,11 +315,9 @@ def generate():
              academic["result_english"],
              academic["result_science"], academic["result_social_science"]]
 
-        result = predict([x])[0]
-        strand_result = strand_map[result]
+        stem, humss, abm, gas = predict_probabilities([x])[0]
 
-        cursor.execute('INSERT INTO result VALUES (NULL, %s, %s)', (session['id'],
-                                                                    strand_result))
+        cursor.execute('INSERT INTO result VALUES (NULL, %s, %s, %s, %s, %s)', (session['id'], stem, humss, abm, gas))
         mysql.connection.commit()
 
         return redirect(url_for('profile'))
@@ -324,10 +325,10 @@ def generate():
     return redirect(url_for('login'))
 
 
-def predict(data_from_user):
+def predict_probabilities(data_from_user):
     x_input = sc.transform(data_from_user)
-    prediction = loaded_model.predict(x_input)
-    return prediction
+    probabilities = loaded_model.predict_proba(x_input)
+    return probabilities
 
 
 if __name__ == "__main__":

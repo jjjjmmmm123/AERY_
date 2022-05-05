@@ -198,7 +198,7 @@
                                                             {% endif %}
                                                         </td>
                                                         <td>
-                                                            Linguistic: &nbsp
+                                                            Investigate: &nbsp
                                                             {% if interest %}
                                                                 <p>{{ interest['result_investigate'] }} %</p>
                                                             {% else %}
@@ -294,6 +294,34 @@
                                                             {% endif %}
                                                         </td>
                                                     </tr>
+                                                    <tr>
+                                                        <td>
+                                                            Intrapersonal: &nbsp
+                                                            {% if learning_style %}
+                                                                <p>{{ learning_style['result_intrapersonal'] }} %</p>
+                                                            {% else %}
+                                                                <p>...</p>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>
+                                                        </td>
+                                                        <td>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            Naturalist: &nbsp
+                                                            {% if learning_style %}
+                                                                <p>{{ learning_style['result_naturalist'] }} %</p>
+                                                            {% else %}
+                                                                <p>...</p>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>
+                                                        </td>
+                                                        <td>
+                                                        </td>
+                                                    </tr>
                                                 </table>
                                             </div>
 
@@ -306,12 +334,11 @@
                                             </center>
                                             <br><br>
                                             <h4>YOUR STRAND IS:</h4>
-                                            <input type="text" id="result" disabled
-                                                   name="checks"
-                                                   value="{{ result['result'] }}"
-                                                   placeholder=""
-                                            >
-
+                                            {% if results %}
+                                                {%- for result in results %}
+                                                    <p> {{ result[0] }}: {{ result[1] }} % </p>
+                                                {% endfor %}
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>

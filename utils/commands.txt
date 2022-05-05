@@ -41,5 +41,8 @@ CREATE TABLE academic (
 CREATE TABLE result (
     id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id int,
-    result varchar(255)
+    stem float,
+    humss float,
+    abm float,
+    gas float
 );
