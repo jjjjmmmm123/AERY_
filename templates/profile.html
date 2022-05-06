@@ -170,7 +170,7 @@
                                                         <td style="display: inline-flex">
                                                             Mathematics: &nbsp
                                                             {% if academic %}
-                                                                <p>{{ academic['result_math'] }} %</p>
+                                                                <p>{{ academic['result_math'] }}</p>
                                                             {% endif %}
                                                         </td>
                                                         <td>
@@ -194,7 +194,7 @@
                                                         <td style="display: inline-flex">
                                                             English: &nbsp
                                                             {% if academic %}
-                                                                <p>{{ academic['result_english'] }} %</p>
+                                                                <p>{{ academic['result_english'] }}</p>
                                                             {% endif %}
                                                         </td>
                                                         <td>
@@ -218,7 +218,7 @@
                                                         <td style="display: inline-flex">
                                                             Science: &nbsp
                                                             {% if academic %}
-                                                                <p>{{ academic['result_science'] }} %</p>
+                                                                <p>{{ academic['result_science'] }}</p>
                                                             {% endif %}
                                                         </td>
                                                         <td>
@@ -242,7 +242,7 @@
                                                         <td style="display: inline-flex">
                                                             Social-Science: &nbsp
                                                             {% if academic %}
-                                                                <p>{{ academic['result_social_science'] }} %</p>
+                                                                <p>{{ academic['result_social_science'] }}</p>
                                                             {% endif %}
                                                         </td>
                                                         <td>
@@ -333,12 +333,14 @@
 
                                             </center>
                                             <br><br>
-                                            <h4>YOUR STRAND IS:</h4>
-                                            {% if results %}
+                                            
+                                            <h5>YOUR STRAND IS:</h5>
+                                            <div style=" column-count: 4; text-transform: uppercase;">
+                                           <b> {% if results %}
                                                 {%- for result in results %}
                                                     <p> {{ result[0] }}: {{ result[1] }} % </p>
                                                 {% endfor %}
-                                            {% endif %}
+                                            {% endif %}</b></div>
                                         </div>
                                     </div>
                                 </div>
