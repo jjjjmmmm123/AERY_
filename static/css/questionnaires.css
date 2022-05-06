@@ -16,7 +16,7 @@ label {
 }
 
 input[type=submit] {
-  background-color: #04AA6D;
+  background-color: #a12c2f;
   color: white;
   padding: 12px 20px;
   border: none;
@@ -26,7 +26,7 @@ input[type=submit] {
 }
 
 input[type=submit]:hover {
-  background-color: #45a049;
+  background-color: #a13e41;
 }
 
 .container {

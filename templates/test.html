@@ -27,6 +27,31 @@
 
 </head>
 
+<style>
+    .form-inline {  
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+.button{
+    background-color: #a12c2f;
+        border: none;
+        color: white;
+        padding: 10px 27px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 50px;
+}
+
+    .button:hover {
+  background-color: #a13e41;
+    }
+</style>
 
 <body>
 
@@ -112,11 +137,11 @@
                                     <form action="{{ url_for('save_learning') }}" method="post">
 
                                         <!--QUESTIONNAIRES FOR LOGICAL-MATHEMATICAL-->
-                                        <div>
+                                        <div class="d-block" id="1">
                                             <center>
                                                 <h2>MULTIPLE INTELLIGENCES (LEARNING STYLE)</h2>
-                                            </center>
-                                            <hr/>
+                                            </center><br>
+  
                                             <div class="col-225">
                                                 <label for="linguistic"><b>LINGUISTIC</b></label><br>
 
@@ -124,7 +149,7 @@
 
                                             <div class="col-775">
                                                 <label for="ling"><b>If you experience any of these below, check the
-                                                    box.</b></label><br>
+                                                    box. If not, click "Next".</b></label><br>
                                                 <label> <input class="check_linguistic" name="check_linguistic" value=1 type="checkbox">
                                                     <span class="checkmark"></span>I enjoy reading different kinds
                                                     of
@@ -172,16 +197,18 @@
                                             </div>
                                         </div>
 
-                                        <hr/>
                                         <!--QUESTIONNAIRES FOR LOGICAL-MATHEMATICAL-->
-                                        <div>
+                                        <div class="d-none" id="2">
+                                            <center>
+                                                <h2>MULTIPLE INTELLIGENCES (LEARNING STYLE)</h2>
+                                            </center><br>
                                             <div class="col-225">
                                                 <label for="logical"><b>LOGICAL-MATHEMATICAL</b></label><br>
                                             </div>
 
                                             <div class="col-775">
                                                 <label for="log"><b>If you experience any of these below, check the
-                                                    box.</b></label><br>
+                                                    box. If not, click "Next".</b></label><br>
                                                 <label> <input class="check_logical" name="check_logical" value=1 type="checkbox">
                                                     <span class="checkmark"></span>I have always been good at math
                                                     and
@@ -229,9 +256,11 @@
                                             </div>
                                         </div>
 
-                                        <hr/>
                                         <!--QUESTIONNAIRES FOR SPATIAL-->
-                                        <div>
+                                        <div class="d-none" id="3">
+                                            <center>
+                                                <h2>MULTIPLE INTELLIGENCES (LEARNING STYLE)</h2>
+                                            </center><br>
                                             <div class="col-225">
                                                 <label for="spatial"><b>SPATIAL</b></label><br>
                                             </div>
@@ -239,7 +268,7 @@
                                             <div class="col-775">
                                                 <label for="spatial"><b>If you experience any of these below, check
                                                     the
-                                                    box.</b></label><br>
+                                                    box. If not, click "Next".</b></label><br>
                                                 <label> <input class="check_spatial" name="check_spatial" value=1 type="checkbox">
                                                     <span class="checkmark"></span>I am good at interpreting art.
                                                 </label><br>
@@ -284,16 +313,18 @@
                                             </div>
                                         </div>
 
-                                        <hr/>
                                         <!--QUESTIONNAIRES FOR BODILY-KINESTHETIC-->
-                                        <div>
+                                        <div class="d-none" id="4">
+                                            <center>
+                                                <h2>MULTIPLE INTELLIGENCES (LEARNING STYLE)</h2>
+                                            </center><br>
                                             <div class="col-225">
                                                 <label for="bodily"><b>BODILY-KINESTHETIC</b></label><br>
                                             </div>
 
                                             <div class="col-775">
                                                 <label for="bod"><b>If you experience any of these below, check the
-                                                    box.</b></label><br>
+                                                    box. If not, click "Next".</b></label><br>
                                                 <label> <input class="check_bodily" name="check_bodily" value=1 type="checkbox">
                                                     <span class="checkmark"></span>I am very good at dancing.
                                                 </label><br>
@@ -338,9 +369,11 @@
                                             </div>
                                         </div>
 
-                                        <hr/>
                                         <!--QUESTIONNAIRES FOR MUSICAL-->
-                                        <div>
+                                        <div class="d-none" id="5">
+                                            <center>
+                                                <h2>MULTIPLE INTELLIGENCES (LEARNING STYLE)</h2>
+                                            </center><br>
                                             <div class="col-225">
                                                 <label for="musical"><b>MUSICAL</b></label><br>
                                             </div>
@@ -348,7 +381,7 @@
                                             <div class="col-775">
                                                 <label for="music"><b>If you experience any of these below, check
                                                     the
-                                                    box.</b></label><br>
+                                                    box. If not, click "Next".</b></label><br>
                                                 <label> <input class="check_musical" name="check_musical" value=1 type="checkbox">
                                                     <span class="checkmark"></span>I can recognize a wide range of
                                                     sounds.
@@ -391,9 +424,11 @@
                                             </div>
                                         </div>
 
-                                        <hr/>
                                         <!--QUESTIONNAIRES FOR INTERPERSONAL-->
-                                        <div>
+                                        <div class="d-none" id="6">
+                                            <center>
+                                                <h2>MULTIPLE INTELLIGENCES (LEARNING STYLE)</h2>
+                                            </center><br>
                                             <div class="col-225">
                                                 <label for="interpersonal"><b>INTERPERSONAL</b></label><br>
                                             </div>
@@ -401,7 +436,7 @@
                                             <div class="col-775">
                                                 <label for="inter"><b>If you experience any of these below, check
                                                     the
-                                                    box.</b></label><br>
+                                                    box. If not, click "Next".</b></label><br>
                                                 <label> <input class="check_interpersonal" name="check_interpersonal" value=1 type="checkbox">
                                                     <span class="checkmark"></span>I can easily mix with other
                                                     people.
@@ -442,9 +477,11 @@
                                             </div>
                                         </div>
 
-                                        <hr/>
                                         <!--QUESTIONNAIRES FOR INTRAPERSONAL-->
-                                        <div>
+                                        <div class="d-none" id="7">
+                                            <center>
+                                                <h2>MULTIPLE INTELLIGENCES (LEARNING STYLE)</h2>
+                                            </center><br>
                                             <div class="col-225">
                                                 <label for="intrapersonal"><b>INTRAPERSONAL</b></label><br>
                                             </div>
@@ -452,7 +489,7 @@
                                             <div class="col-775">
                                                 <label for="intra"><b>If you experience any of these below, check
                                                     the
-                                                    box.</b></label><br>
+                                                    box. If not, click "Next".</b></label><br>
                                                 <label> <input class="check_intrapersonal" name="check_intrapersonal" value=1 type="checkbox">
                                                     <span class="checkmark"></span>I am aware and in control of my
                                                     emotions.
@@ -499,9 +536,11 @@
                                             </div>
                                         </div>
 
-                                        <hr/>
                                         <!--QUESTIONNAIRES FOR NATURALIST-->
-                                        <div>
+                                        <div class="d-none" id="8">
+                                            <center>
+                                                <h2>MULTIPLE INTELLIGENCES (LEARNING STYLE)</h2>
+                                            </center><br>
                                             <div class="col-225">
                                                 <label for="naturalist"><b>NATURALIST</b></label><br>
                                             </div>
@@ -509,7 +548,7 @@
                                             <div class="col-775">
                                                 <label for="natural"><b>If you experience any of these below, check
                                                     the
-                                                    box.</b></label><br>
+                                                    box. If not, click "Next".</b></label><br>
                                                 <label> <input class="check_naturalist" name="check_naturalist" value=1 type="checkbox">
                                                     <span class="checkmark"></span>I am a protector and lover of
                                                     nature
@@ -551,10 +590,13 @@
                                                     spaces.
                                                 </label><br>
                                             </div>
-                                        </div>
+                                        </div><hr>
 
                                         <div class="mb-3">
-                                            <input type="submit" id="form-submit" value="Submit">
+                                            <input type="submit" class="d-none" id="form-submit" value="Submit">
+                                            <div  class="form-inline">
+                                            <input type="button" class="d-none button" id="prev" value="Prev" onclick="moveQuestion(false)">&nbsp&nbsp
+                                            <input type="button" class="d-block button" id="next" value="Next" onclick="moveQuestion(true)">
                                         </div>
                                     </form>
                                 </div>
@@ -588,12 +630,13 @@
 
 <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
 <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrapp.min.js') }}"></script>
-
+<script src="{{ url_for('static', filename='assets/js/nextprev.js')}}"></script>
 <script src="{{ url_for('static', filename='assets/js/isotope.js') }}"></script>
 <script src="{{ url_for('static', filename='assets/js/lightbox.js') }}"></script>
 <script src="{{ url_for('static', filename='assets/js/tabs.js') }}"></script>
 <script src="{{ url_for('static', filename='assets/js/slick-slider.js') }}"></script>
 <script src="{{ url_for('static', filename='assets/js/custom.js') }}"></script>
+
 <script>
 
     //according to loftblog tut
