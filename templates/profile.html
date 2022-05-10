@@ -337,14 +337,14 @@
 
                                             </center>
                                             <br><br>
-                                            
-                                            <h5>YOUR STRAND IS:</h5>
-                                            <div style=" column-count: 4; text-transform: uppercase;">
-                                           <b> {% if results %}
-                                                {%- for result in results %}
-                                                    <p> {{ result[0] }}: {{ result[1] }} % </p>
-                                                {% endfor %}
-                                            {% endif %}</b></div>
+ 
+                                            <h4>YOUR STRAND IS: 
+                                                <b style="text-transform: uppercase">
+                                                    {% if results %}
+                                                        {{ results[0][0] }}
+                                                    {% endif %}
+                                                </b>
+                                            </h4>
                                         </div>
                                     </div>
                                 </div>
