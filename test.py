@@ -151,8 +151,8 @@ def abm():
     return redirect(url_for('login'))
 
 
-@app.route('/humms')
-def humms():
+@app.route('/humss')
+def humss():
     if 'loggedin' in session:
         # User is loggedin show them the home page
         return render_template('humms-page.html', username=session['email'])
