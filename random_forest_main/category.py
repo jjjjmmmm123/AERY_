@@ -27,24 +27,25 @@ _VARIABLES = {
     "ACAD_ACHIEVMENTS" : {
         "MATH" :  { "STEM": 4, "ABM": 3, "GAS": 2, "HUMSS": 1},
         "ENGLISH" : { "HUMSS": 4, "ABM": 3, "STEM": 2, "GAS": 1},
-        "SCIENCE" : { "STEM": 4, "GAS": 3,  "ABM": 2, "HUMSS": 1},
+        "SCIENCE" : { "STEM": 4, "GAS": 3,  "HUMSS": 2, "ABM": 1},
         "SOCIAL_SCIENCE"  : { "HUMSS": 4, "ABM": 3, "GAS": 2, "STEM": 1 }
     }
    
 }
 
-def specialCases(data):
-    isOnyGrade = 0
+def checkDataDependability(data_x):
+
+    isOnlyGrade = 0
+    isAllSimilar = 1
+
     for i in range(14):
-        isOnyGrade += data[i]
+        isOnlyGrade += data_x[i]
     
-    if(isOnyGrade != 0):
+    if(isOnlyGrade != 0):
         return None
 
-    isAllSimilar = 1
-   
-    for i in range(14, len(data) - 1):
-        if(data[i] == data[i + 1]):
+    for current_idx in range(14, len(data_x) - 1):
+        if(data_x[current_idx] == data_x[current_idx + 1]):
             isAllSimilar += 1
            
     if(isAllSimilar == 1):
@@ -62,7 +63,7 @@ def WeightFactorAlgorithm(data):
    
     res = { "HUMSS": 0, "GAS": 0, "STEM": 0, "ABM": 0 }
 
-    spRes = specialCases(data)
+    spRes = checkDataDependability(data)
     if(spRes != None):
         return spRes
     else:
@@ -74,7 +75,6 @@ def WeightFactorAlgorithm(data):
             categories = variable_value
             
             temp_counter = { "HUMSS": 0, "GAS": 0, "STEM": 0, "ABM": 0 }
-            
 
             for category_idx, category_value in categories.items():
                 strands = category_value
@@ -82,24 +82,18 @@ def WeightFactorAlgorithm(data):
                     test_score = data[data_counter]
                     if(test_score > 0):
                         if(variable_id != "ACAD_ACHIEVMENTS"):
-                            temp_counter[strand_name] += ((strand_value) * test_score)
+                            temp_counter[strand_name] += (strand_value * test_score)
                         else:
-                            temp_counter[strand_name] += (strand_value + test_score)
-               
+                            temp_counter[strand_name] += ((strand_value / 10) * test_score)
                 data_counter += 1   
             
     
             
             for temp_counter_id, temp_counter_value in temp_counter.items():
-            
+               
                 res[temp_counter_id] += temp_counter[temp_counter_id] * (_DISTRIBUTION[variable_id] / 100)
         
             
-        
-    
-
-    
-    
     tentativeStrand = ["", float("-inf")]
     for res_id, res_value in res.items():
         if(tentativeStrand[1] < res_value):
@@ -112,32 +106,35 @@ def WeightFactorAlgorithm(data):
 
 
 
+  
 
 
-    # data = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90, 90, 90, 90] # OUTPUT STEM ✔️
-    # data = [3, 2, 3, 1, 4, 4, 4, 5, 5, 5, 6, 3, 5, 6, 86, 81, 84, 87] 
-    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 90, 90, 90]
-    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 90, 90, 90]
-    # data = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90, 90, 90, 90] 
-    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0]    
-    # data = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90, 90, 90, 90] 
+    # data = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90, 90, 90, 90]   # OUTPUT STEM ✔️
+    # data = [3, 2, 3, 1, 4, 4, 4, 5, 5, 5, 6, 3, 5, 6, 86, 81, 84, 87]   # OUTPUT HUMSS ✔️ 
+    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 90, 90, 90]  # OUTPUT STEM ✔️ 
+    # data = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90, 90, 90, 90]   # OUTPUT STEM ✔️ 
+    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0]     # OUTPUT HUMSS ✔️ 
+
    
-    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0]  
-    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0]
-    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0]  
-    # data = [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
-    # data = [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
-    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
-    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]  
-    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]     # OUTUPUT GAS ✔️ 
-    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]     # OUTPUT ABM ✔️
-    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]     # OUTPUTSTEM ✔️
-    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]     # OUTPUT HUMSS ✔️
-    # data = [3, 0, 3, 0, 0, 0, 3, 3, 0, 3, 0, 0, 3, 0, 90, 90, 90, 90] # OUTPUT HUMSS ✔️
-    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 75, 100,75, 75] # OUTPUT HUMSS ✔️
-    # data = [0, 0, 0, 0, 4, 4, 0, 0, 4, 0, 0, 0, 4, 0, 90, 90, 90, 90] # OUTPUT ABM  ✔️ 
-    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 75, 100,75, 75] # OUTPUT HUMS ✔️
-    # data = [0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90, 90, 90, 90] # OUTPUT STEM ✔️
+    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0]      # OUTPUT STEM ✔️ 
+    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0]      # OUTPUT STEM ✔️
+    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 75, 75, 100, 75]   # OUTPUT STEM ✔️
+    # data = [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]        # OUTPUT STEM ✔️
+    # data = [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]        # OUTPUT STEM ✔️   
+    # data = [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 75, 75, 75, 75]    # OUTPUT STEM ✔️
+    # data = [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 75, 100, 75, 100]  # OUTPUT STEM ✔️
+
+
+    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]        # OUTPUT STEM ✔️
+    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]        # OUTUPUT GAS ✔️ 
+    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]        # OUTPUT ABM ✔️
+    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]        # OUTPUTSTEM ✔️
+    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]        # OUTPUT HUMSS ✔️
+    # data = [3, 0, 3, 0, 0, 0, 3, 3, 0, 3, 0, 0, 3, 0, 90, 90, 90, 90]    # OUTPUT HUMSS ✔️
+    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 75, 100,75, 75]    # OUTPUT HUMSS ✔️
+    # data = [0, 0, 0, 0, 4, 4, 0, 0, 4, 0, 0, 0, 4, 0, 90, 90, 90, 90]    # OUTPUT ABM  ✔️ 
+    # data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 75, 100,75, 75]    # OUTPUT HUMS ✔️
+    # data = [0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90, 90, 90, 90]    # OUTPUT STEM ✔️
 
 
 
