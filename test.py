@@ -16,15 +16,15 @@ app.secret_key = "yey"
 # DB Connection
 # Enter your database connection details below
 
-#app.config['MYSQL_HOST'] = 'us-cdbr-east-05.cleardb.net'
-#app.config['MYSQL_USER'] = 'b1156bf8bbcd21'
-#app.config['MYSQL_PASSWORD'] = '7fb49349'
-#app.config['MYSQL_DB'] = 'heroku_3e72b37b0c5d4db'
+app.config['MYSQL_HOST'] = 'us-cdbr-east-05.cleardb.net'
+app.config['MYSQL_USER'] = 'b1156bf8bbcd21'
+app.config['MYSQL_PASSWORD'] = '7fb49349'
+app.config['MYSQL_DB'] = 'heroku_3e72b37b0c5d4db'
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'aery'
+#app.config['MYSQL_HOST'] = 'localhost'
+#app.config['MYSQL_USER'] = 'root'
+#app.config['MYSQL_PASSWORD'] = ''
+#app.config['MYSQL_DB'] = 'aery'
 
 # Intialize MySQL
 mysql = MySQL(app)
