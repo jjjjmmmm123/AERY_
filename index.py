@@ -55,6 +55,7 @@ def login():
             session['loggedin'] = True
             session['id'] = account['id']
             session['email'] = account['email']
+            session["dataX"] = []
             # Redirect to home page
             return redirect(url_for('home'))
         else:
@@ -264,7 +265,6 @@ def save_academic():
         return redirect(url_for("profile"))
     return redirect(url_for('login'))
 
-dataX = None
 
 @app.route('/profile')
 def profile():
@@ -282,14 +282,22 @@ def profile():
         mysql.connection.commit()
 
         results = None
+        finalresult = None
+        
         if result:
             results = [("stem", round(result["stem"] * 100, 2)), ("humss", round(result["humss"] * 100, 2)), ("abm", round(result["abm"] * 100, 2)),
                        ("gas", round(result["gas"] * 100, 2))]
 
             results.sort(key=lambda x: -x[1])
 
-            resultrandomforest = result[0][0]
-            finalresult = getRecommendedTrack(dataX, resultrandomforest)
+            print("1",result["weight"])
+            print("2",results[0][0].upper())
+
+            resultrandomforest = results[0][0].upper()
+            if result["weight"] != resultrandomforest:
+                finalresult = result["weight"]
+            else:
+                finalresult = results[0][0]
 
         return render_template('profile.html',
                                username=session['email'],
@@ -298,7 +306,7 @@ def profile():
                                academic=academic, interest=interest
                                )
     return redirect(url_for('login'))
-
+    
 
 @app.route('/generate')
 def generate():
@@ -327,11 +335,8 @@ def generate():
              academic["result_science"], academic["result_social_science"]]
 
         stem, humss, abm, gas = predict_probabilities([x])[0]
-
-        global dataX
-        dataX = x
-
-        cursor.execute('INSERT INTO result VALUES (NULL, %s, %s, %s, %s, %s)', (session['id'], stem, humss, abm, gas))
+        weight = getRecommendedTrack(x)
+        cursor.execute('INSERT INTO result VALUES (NULL, %s, %s, %s, %s, %s, %s)', (session['id'], stem, humss, abm, gas, weight))
         mysql.connection.commit()
 
         return redirect(url_for('profile'))
@@ -344,12 +349,10 @@ def predict_probabilities(data_from_user):
     probabilities = loaded_model.predict_proba(x_input)
     return probabilities
   
-def getRecommendedTrack(data, resultrandomforest):
+def getRecommendedTrack(data):
     weightFactor = WeightFactorAlgorithm(data)
-    randomForest = resultrandomforest.upper()
-    if(weightFactor != randomForest):
-       return weightFactor
-    return randomForest
+    
+    return weightFactor
 
 
 if __name__ == "__main__":
