@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import os
 import pickle
 from utils.utility import strand_map, table_map
+from random_forest_main.category import WeightFactorAlgorithm
 
 load_dotenv()
 
@@ -14,6 +15,12 @@ app.secret_key = "yey"
 
 # DB Connection
 # Enter your database connection details below
+
+#app.config['MYSQL_HOST'] = 'us-cdbr-east-05.cleardb.net'
+#app.config['MYSQL_USER'] = 'b1156bf8bbcd21'
+#app.config['MYSQL_PASSWORD'] = '7fb49349'
+#app.config['MYSQL_DB'] = 'heroku_3e72b37b0c5d4db'
+
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
@@ -22,8 +29,8 @@ app.config['MYSQL_DB'] = 'aery'
 # Intialize MySQL
 mysql = MySQL(app)
 
-FILE_NAME = 'random_forest-main/random_forest_model.sav'
-sc = pickle.load(open('random_forest-main/scaler.pkl', 'rb'))
+FILE_NAME = 'random_forest_main/random_forest_model.sav'
+sc = pickle.load(open('random_forest_main/scaler.pkl', 'rb'))
 loaded_model = pickle.load(open(FILE_NAME, 'rb'))
 
 
@@ -48,6 +55,7 @@ def login():
             session['loggedin'] = True
             session['id'] = account['id']
             session['email'] = account['email']
+            session["dataX"] = []
             # Redirect to home page
             return redirect(url_for('home'))
         else:
@@ -274,20 +282,31 @@ def profile():
         mysql.connection.commit()
 
         results = None
+        finalresult = None
+        
         if result:
             results = [("stem", round(result["stem"] * 100, 2)), ("humss", round(result["humss"] * 100, 2)), ("abm", round(result["abm"] * 100, 2)),
                        ("gas", round(result["gas"] * 100, 2))]
 
             results.sort(key=lambda x: -x[1])
 
+            print("1",result["weight"])
+            print("2",results[0][0])
+
+            resultrandomforest = results[0][0].upper()
+            if result["weight"] != resultrandomforest:
+                finalresult = result["weight"]
+            else:
+                finalresult = results[0][0]
+
         return render_template('profile.html',
                                username=session['email'],
-                               results=results,
+                               results=finalresult,
                                learning_style=learning_style,
                                academic=academic, interest=interest
                                )
     return redirect(url_for('login'))
-
+    
 
 @app.route('/generate')
 def generate():
@@ -316,8 +335,8 @@ def generate():
              academic["result_science"], academic["result_social_science"]]
 
         stem, humss, abm, gas = predict_probabilities([x])[0]
-
-        cursor.execute('INSERT INTO result VALUES (NULL, %s, %s, %s, %s, %s)', (session['id'], stem, humss, abm, gas))
+        weight = getRecommendedTrack(x)
+        cursor.execute('INSERT INTO result VALUES (NULL, %s, %s, %s, %s, %s, %s)', (session['id'], stem, humss, abm, gas, weight))
         mysql.connection.commit()
 
         return redirect(url_for('profile'))
@@ -329,7 +348,13 @@ def predict_probabilities(data_from_user):
     x_input = sc.transform(data_from_user)
     probabilities = loaded_model.predict_proba(x_input)
     return probabilities
+  
+def getRecommendedTrack(data):
+    weightFactor = WeightFactorAlgorithm(data)
+    
+    return weightFactor
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host="0.0.0.0")  
+    
