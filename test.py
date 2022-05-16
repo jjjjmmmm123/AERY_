@@ -291,7 +291,7 @@ def profile():
             results.sort(key=lambda x: -x[1])
 
             print("1",result["weight"])
-            print("2",results[0][0])
+            print("2",results[0][0].upper())
 
             resultrandomforest = results[0][0].upper()
             if result["weight"] != resultrandomforest:
