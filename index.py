@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 import os
 import pickle
 from utils.utility import strand_map, table_map
-from random_forest_main.category import WeightFactorAlgorithm
+from random_forest_main.category import WeightFactorAlgorithm, isDataEnough
 
 load_dotenv()
 
@@ -16,15 +16,16 @@ app.secret_key = "yey"
 # DB Connection
 # Enter your database connection details below
 
-# app.config['MYSQL_HOST'] = 'us-cdbr-east-05.cleardb.net'
-# app.config['MYSQL_USER'] = 'b1156bf8bbcd21'
-# app.config['MYSQL_PASSWORD'] = '7fb49349'
-# app.config['MYSQL_DB'] = 'heroku_3e72b37b0c5d4db'
+#app.config['MYSQL_HOST'] = 'us-cdbr-east-05.cleardb.net'
+#app.config['MYSQL_USER'] = 'b3930d314dd399'
+#app.config['MYSQL_PASSWORD'] = 'cf94d6ba'
+#app.config['MYSQL_DB'] = 'heroku_59d2dc346c440bc'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'password'
+app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'aery'
+
 
 # Intialize MySQL
 mysql = MySQL(app)
@@ -207,15 +208,7 @@ def test3():
 def save_learning():
     if 'loggedin' in session:
         if request.method == 'POST':
-            # check_naturalist = round(len(request.form.getlist("check_naturalist")) / 8 * 100, 2)
-            # check_intrapersonal = round(len(request.form.getlist("check_intrapersonal")) / 8 * 100, 2)
-            # check_interpersonal = round(len(request.form.getlist("check_interpersonal")) / 8 * 100, 2)
-            # check_musical = round(len(request.form.getlist("check_musical")) / 8 * 100, 2)
-            # check_bodily = round(len(request.form.getlist("check_bodily")) / 8 * 100, 2)
-            # check_spatial = round(len(request.form.getlist("check_spatial")) / 8 * 100, 2)
-            # check_logical = round(len(request.form.getlist("check_logical")) / 8 * 100, 2)
-            # check_linguistic = round(len(request.form.getlist("check_linguistic")) / 8 * 100, 2)
-            #
+            
             check_naturalist = len(request.form.getlist("check_naturalist"))
             check_intrapersonal = len(request.form.getlist("check_intrapersonal"))
             check_interpersonal = len(request.form.getlist("check_interpersonal"))
@@ -239,12 +232,6 @@ def save_learning():
 @app.route('/sinterest', methods=['GET', 'POST'])
 def save_interest():
     if 'loggedin' in session:
-        # check_realistic = round(len(request.form.getlist("check_realistic")) / 7 * 100, 2)
-        # check_investigate = round(len(request.form.getlist("check_investigate")) / 7 * 100, 2)
-        # check_artistic = round(len(request.form.getlist("check_artistic")) / 7 * 100, 2)
-        # check_social = round(len(request.form.getlist("check_social")) / 7 * 100, 2)
-        # check_enterprising = round(len(request.form.getlist("check_enterprising")) / 7 * 100, 2)
-        # check_conventional = round(len(request.form.getlist("check_conventional")) / 7 * 100, 2)
 
         check_realistic = len(request.form.getlist("check_realistic"))
         check_investigate = len(request.form.getlist("check_investigate"))
@@ -309,11 +296,10 @@ def profile():
             print("1", result["weight"])
             print("2", results[0][0].upper())
 
-            resultrandomforest = results[0][0].upper()
-            if result["weight"] != resultrandomforest:
-                finalresult = result["weight"]
-            else:
+            if result["isdataenough"] == "True":
                 finalresult = results[0][0]
+            else:
+                finalresult = result["weight"]
 
         # to percentages --------------------------------------------------
 
@@ -325,7 +311,7 @@ def profile():
         if interest:
             for key in interest.keys():
                 if key != "id" and key != "user_id":
-                    interest[key] = round(interest[key] / 8 * 100, 2)
+                    interest[key] = round(interest[key] / 7 * 100, 2)
 
         return render_template('profile.html',
                                username=session['email'],
@@ -362,28 +348,13 @@ def generate():
              academic["result_english"],
              academic["result_science"], academic["result_social_science"]]
 
-        """
-        3,3,4,4,3,4,7,3,4,5,3,5,4,3,90,93,88,91,2
-        4,6,3,5,3,3,7,3,4,5,3,5,4,3,90,91,86,93,2
-        3,4,4,3,3,4,3,2,5,4,5,4,8,3,89,98,86,89,2
-        3,2,4,5,2,5,3,2,5,4,5,4,8,3,94,93,88,95,2
-        3,6,3,4,5,3,7,3,4,5,3,5,4,3,90,95,85,91,2
-        3,4,4,3,3,4,7,5,3,5,3,4,2,3,92,98,89,96,2
-        4,4,4,3,3,3,7,3,4,5,3,5,4,3,85,95,90,92,2
-        3,5,5,4,2,6,7,5,3,5,3,4,2,3,87,93,92,90,2
-        2,2,4,5,4,6,7,3,4,5,3,5,4,3,88,95,92,86,2
-        3,3,2,6,4,4,7,5,3,5,3,4,2,3,84,98,86,94,2
-        2,4,2,5,6,3,2,6,3,5,8,2,4,4,86,96,91,94,2
-        3,4,3,4,3,4,5,4,3,4,3,6,4,5,90,91,87,87,2
-        4,4,5,2,3,2,5,4,3,4,3,6,4,5,94,97,92,96,2
-        3,3,4,4,3,4,3,2,5,4,5,4,8,3,83,92,92,96,2
-        """
-        x = [4, 6, 3, 5, 3, 3, 7, 3, 4, 5, 3, 5, 4, 3, 90, 91, 86, 93]
-
         stem, humss, abm, gas = predict_probabilities([x])[0]
         weight = getRecommendedTrack(x)
-        cursor.execute('INSERT INTO result VALUES (NULL, %s, %s, %s, %s, %s, %s)',
-                       (session['id'], stem, humss, abm, gas, weight))
+        isenough = "False"
+        if isDataEnough(x): 
+            isenough = "True"
+        cursor.execute('INSERT INTO result VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)',
+                       (session['id'], stem, humss, abm, gas, weight, isenough))
         mysql.connection.commit()
 
         return redirect(url_for('profile'))
